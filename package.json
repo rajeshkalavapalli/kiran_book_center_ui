@@ -1,7 +1,7 @@
 {
   "name": "kiran-book-center-ui",
   "private": true,
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Kiran Book Center shop website: home, shop, product pages, bag, checkout, accounts, tracking and requests.",
   "type": "module",
   "scripts": {

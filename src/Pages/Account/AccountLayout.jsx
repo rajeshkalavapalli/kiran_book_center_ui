@@ -31,8 +31,8 @@ export default function AccountLayout() {
                 <Button
                     startIcon={<LogoutRoundedIcon />}
                     onClick={() => {
+                        navigate("/", { replace: true });
                         signOut();
-                        navigate("/");
                     }}
                     sx={{ color: brand.color.inkSoft }}
                 >

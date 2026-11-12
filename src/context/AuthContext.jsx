@@ -25,25 +25,35 @@ export function AuthProvider({ children }) {
 
     const login = useCallback(async (form) => {
         const c = await account.login(form);
+        setSignedOut(false);
         setCustomer(c);
         return c;
     }, []);
 
     const register = useCallback(async (form) => {
         const c = await account.register(form);
+        setSignedOut(false);
         setCustomer(c);
         return c;
     }, []);
 
     // After checkout creates an account, pick up the new session.
-    const refresh = useCallback(() => setCustomer(account.getSessionCustomer()), []);
+    const refresh = useCallback(() => {
+        const c = account.getSessionCustomer();
+        if (c) setSignedOut(false);
+        setCustomer(c);
+    }, []);
+
+    // True right after the customer taps "Sign out", so account pages go to the home page, not the sign-in page.
+    const [signedOut, setSignedOut] = useState(false);
 
     const signOut = useCallback(() => {
         account.signOut();
+        setSignedOut(true);
         setCustomer(null);
     }, []);
 
-    const value = useMemo(() => ({ customer, login, register, refresh, signOut, setCustomer }), [customer, login, register, refresh, signOut]);
+    const value = useMemo(() => ({ customer, login, register, refresh, signOut, setCustomer, signedOut }), [customer, login, register, refresh, signOut, signedOut]);
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
@@ -55,8 +65,10 @@ export const useAuth = () => {
 
 // Pages that need a signed-in customer send visitors to /login and bring them back afterwards.
 export function RequireCustomer({ children }) {
-    const { customer } = useAuth();
+    const { customer, signedOut } = useAuth();
     const location = useLocation();
+    // Just signed out: back to the shop's home page. Otherwise (e.g. opened a link to "My orders"): sign in first.
+    if (!customer && signedOut) return <Navigate to="/" replace />;
     if (!customer) return <Navigate to={`/login?next=${encodeURIComponent(location.pathname + location.search)}`} replace />;
     return children;
 }

@@ -1,5 +1,9 @@
 # kiran book center ui
 
+# V0.1.4
+- Sign out now takes the customer to the home page instead of the sign-in page
+- Opening an account page without signing in still asks the customer to sign in first
+
 # V0.1.3
 - kiran book center ui created
 - Home page: search, quick links, shop by category, exam picks, back-to-school kits, new arrivals, schools and colleges, visit the store
